@@ -149,9 +149,9 @@ int main(int argc, char** argv)
 		std::shared_ptr<Material> brickTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 8.0f, brickTexture);
 
 		// Create geometry
-		Geometry cube = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.5f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), woodTextureMaterial);
-		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
-		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.0f, 0.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
+		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
+		//Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
+		//Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.0f, 0.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
 
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
@@ -176,14 +176,13 @@ int main(int argc, char** argv)
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
 			camera.update(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
+		
 
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
 			// Render
 			cube.draw();
-			cylinder.draw();
-			sphere.draw();
 
 			// Compute frame time
 			dt = t;
