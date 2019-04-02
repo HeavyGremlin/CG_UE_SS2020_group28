@@ -56,4 +56,9 @@ public:
 	 * @param strafing: is the cammera strafing
 	 */
 	void update(int x, int y, float zoom, bool dragging, bool strafing);
+
+	/*!
+	* move camera
+	*/
+	void positionUpdate(glm::vec3 newPosition);
 };
