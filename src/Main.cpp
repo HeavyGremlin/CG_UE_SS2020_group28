@@ -36,6 +36,7 @@ static bool _culling = true;
 static bool _dragging = false;
 static bool _strafing = false;
 static float _zoom = 6.0f;
+static bool _accalerate = false;
 
 
 /* --------------------------------------------- */
@@ -151,7 +152,7 @@ int main(int argc, char** argv)
 		// Create geometry
 		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		//Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
-		//Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.0f, 0.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
+		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
 
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
@@ -173,16 +174,28 @@ int main(int argc, char** argv)
 			// Poll events
 			glfwPollEvents();
 
+			//log
+			camera.getPosition();
+
+			// Update Objects
+			if (_accalerate) {
+				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.001f)));
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.001f));
+			}
+
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
 			camera.update(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
-		
 
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
 			// Render
 			cube.draw();
+			sphere.draw();
+
+			//log
+			camera.getPosition();
 
 			// Compute frame time
 			dt = t;
@@ -192,6 +205,7 @@ int main(int argc, char** argv)
 
 			// Swap buffers
 			glfwSwapBuffers(window);
+
 		}
 	}
 
@@ -251,21 +265,28 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// F2 - Culling
 	// Esc - Exit
 
-	if (action != GLFW_RELEASE) return;
+	//if (action != GLFW_RELEASE) return;
 
 	switch (key)
 	{
 		case GLFW_KEY_ESCAPE:
+			if (action == GLFW_RELEASE) return;
 			glfwSetWindowShouldClose(window, true);
 			break;
 		case GLFW_KEY_F1:
+			if (action == GLFW_RELEASE) return;
 			_wireframe = !_wireframe;
 			glPolygonMode(GL_FRONT_AND_BACK, _wireframe ? GL_LINE : GL_FILL);
 			break;
 		case GLFW_KEY_F2:
+			if (action == GLFW_RELEASE) return;
 			_culling = !_culling;
 			if (_culling) glEnable(GL_CULL_FACE);
 			else glDisable(GL_CULL_FACE);
+			break;
+		case GLFW_KEY_SPACE:
+			if (action == GLFW_RELEASE) _accalerate = false;
+			else _accalerate = true;
 			break;
 	}
 }
