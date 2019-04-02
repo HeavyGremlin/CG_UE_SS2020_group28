@@ -15,6 +15,10 @@
 #include "Texture.h"
 
 
+#include <iostream>
+#include "glm/ext.hpp"
+
+
 /* --------------------------------------------- */
 // Prototypes
 /* --------------------------------------------- */
@@ -175,7 +179,7 @@ int main(int argc, char** argv)
 			glfwPollEvents();
 
 			//log
-			camera.getPosition();
+			std::cout << "vorher: " + glm::to_string(camera.getPosition()) << std::endl;
 
 			// Update Objects
 			if (_accalerate) {
@@ -195,7 +199,7 @@ int main(int argc, char** argv)
 			sphere.draw();
 
 			//log
-			camera.getPosition();
+			std::cout << "naher: " + glm::to_string(camera.getPosition()) << std::endl;
 
 			// Compute frame time
 			dt = t;
