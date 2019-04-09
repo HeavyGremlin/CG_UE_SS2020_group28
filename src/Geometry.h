@@ -100,6 +100,13 @@ public:
 	void transform(glm::mat4 transformation);
 
 	/*!
+	 * Rotate the object, i.e. updates the model matrix
+	 * @param transformation: the transformation matrix to be applied to the object
+	 */
+	//void rotate(float degree, glm::vec3 rotationAxis);
+	//glm::mat4 getModelMatrix();
+
+	/*!
 	 * Resets the model matrix to the identity matrix
 	 */
 	void resetModelMatrix();
