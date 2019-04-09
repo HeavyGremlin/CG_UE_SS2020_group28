@@ -327,7 +327,6 @@ GeometryData Geometry::createSphereGeometry(unsigned int longitudeSegments, unsi
 		}
 	}
 
-
 	return std::move(data);
 }
 

@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
-
+		camera.insertValues(fov, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
 		PointLight pointL(glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
@@ -178,19 +178,17 @@ int main(int argc, char** argv)
 			// Poll events
 			glfwPollEvents();
 
-			//log
-			std::cout << "vorher: " + glm::to_string(camera.getPosition()) << std::endl;
-
 			// Update Objects
-			if (_accalerate) {
-				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.001f)));
-				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.001f));
-			}
+
 
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
-			camera.update(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
-
+			camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
+			if (_accalerate) {
+				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
+			}
+      
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
@@ -198,10 +196,8 @@ int main(int argc, char** argv)
 			cube.draw();
 			sphere.draw();
 
-			//log
-			std::cout << "nacher: " + glm::to_string(camera.getPosition()) << std::endl;
+			// Compute frame time
 
-			// Compute frame time 
 			dt = t;
 			t = float(glfwGetTime());
 			dt = t - dt;
