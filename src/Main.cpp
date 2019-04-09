@@ -199,9 +199,9 @@ int main(int argc, char** argv)
 			sphere.draw();
 
 			//log
-			std::cout << "naher: " + glm::to_string(camera.getPosition()) << std::endl;
+			std::cout << "nacher: " + glm::to_string(camera.getPosition()) << std::endl;
 
-			// Compute frame time
+			// Compute frame time 
 			dt = t;
 			t = float(glfwGetTime());
 			dt = t - dt;
