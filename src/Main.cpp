@@ -178,9 +178,6 @@ int main(int argc, char** argv)
 			// Poll events
 			glfwPollEvents();
 
-			//log
-
-
 			// Update Objects
 
 
@@ -191,14 +188,13 @@ int main(int argc, char** argv)
 				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
 				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
 			}
+      
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
 			// Render
 			cube.draw();
 			sphere.draw();
-
-			//log
 
 			// Compute frame time
 			dt = t;
@@ -290,7 +286,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_SPACE:
 			if (action == GLFW_RELEASE) _accalerate = false;
 			else _accalerate = true;
-
 			break;
 	}
 }
