@@ -41,6 +41,12 @@ static bool _dragging = false;
 static bool _strafing = false;
 static float _zoom = 6.0f;
 static bool _accalerate = false;
+static bool _rotateForward = false;
+static bool _rotateBackward = false;
+static bool _rotateLeft = false;
+static bool _rotateRight = false;
+static bool _spinRight = false;
+static bool _spinLeft = false;
 
 
 /* --------------------------------------------- */
@@ -179,15 +185,35 @@ int main(int argc, char** argv)
 			glfwPollEvents();
 
 			// Update Objects
+			if (_accalerate) {
+				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
+			}
+			if (_rotateForward) {
+				cube.transform(glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				//std::cout << "matrix" + glm::to_string(cube.getModelMatrix()) << std::endl;
+				//cube.rotate(-0.0005f, glm::vec3(1.0f,0.0f,0.0f));
+			}
+			if (_rotateBackward) {
+				cube.transform(glm::rotate(0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
+			}
+			if (_rotateRight) {
+				cube.transform(glm::rotate(-0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)));
+			}
+			if (_rotateLeft) {
+				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)));
+			}
+			if (_spinRight) {
+				cube.transform(glm::rotate(-0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+			}
+			if (_spinLeft) {
+				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+			}
 
 
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
 			camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
-			if (_accalerate) {
-				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
-				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
-			}
       
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
@@ -287,6 +313,30 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_SPACE:
 			if (action == GLFW_RELEASE) _accalerate = false;
 			else _accalerate = true;
+			break;
+		case GLFW_KEY_W:
+			if (action == GLFW_RELEASE) _rotateForward = false;
+			else _rotateForward = true;
+			break;
+		case GLFW_KEY_S:
+			if (action == GLFW_RELEASE) _rotateBackward = false;
+			else _rotateBackward = true;
+			break;
+		case GLFW_KEY_D:
+			if (action == GLFW_RELEASE) _rotateRight = false;
+			else _rotateRight = true;
+			break;
+		case GLFW_KEY_A:
+			if (action == GLFW_RELEASE) _rotateLeft = false;
+			else _rotateLeft = true;
+			break;
+		case GLFW_KEY_E:
+			if (action == GLFW_RELEASE) _spinRight = false;
+			else _spinRight = true;
+			break;
+		case GLFW_KEY_Q:
+			if (action == GLFW_RELEASE) _spinLeft = false;
+			else _spinLeft = true;
 			break;
 	}
 }

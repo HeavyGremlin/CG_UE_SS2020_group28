@@ -77,6 +77,15 @@ void Geometry::transform(glm::mat4 transformation)
 	_modelMatrix = transformation * _modelMatrix;
 }
 
+/*void Geometry::rotate(float degree, glm::vec3 rotationAxis)
+{
+	_modelMatrix = glm::rotate(degree, (rotationAxis * _modelMatrix)) * _modelMatrix;
+}*/
+ /*glm::mat4 getModelMatrix()
+{
+	return _modelMatrix;
+}*/
+
 void Geometry::resetModelMatrix()
 {
 	_modelMatrix = glm::mat4(1);
