@@ -13,7 +13,7 @@
 #include "Material.h"
 #include "Light.h"
 #include "Texture.h"
-
+#include"PxPhysicsAPI.h"
 
 #include <iostream>
 #include "glm/ext.hpp"
