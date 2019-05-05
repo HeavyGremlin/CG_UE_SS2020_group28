@@ -23,12 +23,16 @@ protected:
 	glm::mat4 _viewMatrix;
 	glm::mat4 _projMatrix;
 	int _mouseX, _mouseY;
+	int _mouseXFirstP, _mouseYFirstP;
 	float _yaw, _pitch;
+	float _yawFirstP, _pitchFirstP;
 	glm::vec3 _position;
 	glm::vec3 _front;
 	glm::vec3 _up;
 	float _fov;
 	float _aspect;
+	float _window_height;
+	float _window_width;
 	float _near;
 	float _far;
 	bool _firstMouse;
@@ -42,7 +46,7 @@ public:
 	 * @param near: near plane
 	 * @param far: far plane
 	 */
-	Camera(float fov, float aspect, float near, float far);
+	Camera(float fov, int window_height, int window_width, float aspect, float near, float far);
 	~Camera();
 
 	/*!
@@ -63,7 +67,7 @@ public:
 	 * @param dragging: is the cammera dragging
 	 * @param strafing: is the cammera strafing
 	 */
-	void insertValues(float fov, float aspect, float zNear, float zFar) {
+	void insertValues(float fov, int window_height, int window_width, float aspect, float zNear, float zFar) {
 		_position = glm::vec3(0.0f, 0.0f, 6.0f);
 		_front = glm::vec3(0.0f, 0.0f, -1.0f);
 		_fov = fov;
@@ -74,48 +78,21 @@ public:
 		_pitch = 0.0f;
 		_firstMouse = true;
 		_viewMatrix = glm::lookAt(_position, _front, glm::vec3(0.0f, 1.0f, 0.0f));
-
-
+		_window_height = window_height;
+		_window_width = window_width;
 	}
 	void update(int x, int y, float zoom, bool dragging, bool strafing);
 
-	void updates(int x, int y, float zoom, bool dragging, bool strafing) {
-		if (dragging) {
-			if (_firstMouse) {
-				_mouseX = x;
-				_mouseY = y;
-				_firstMouse = false;
-			}
-			float xOffset = x - _mouseX;
-			float yOffset = _mouseY - y;
-			_mouseX = x;
-			_mouseY = y;
+	void updates(int x, int y, float zoom, bool dragging, bool strafing);
+	void updatesArcball(int x, int y, float zoom, bool dragging, bool strafing);
+	void positionUpdate(glm::vec3 newPosition);
+private:
+	glm::vec3 get_arcball_vector(int x, int y);
 
-			float sensitivity = 0.5f;
-			xOffset *= sensitivity;
-			yOffset *= sensitivity;
-
-			_yaw += xOffset;
-			_pitch += yOffset;
-
-			if (_pitch > 89.0f)
-				_pitch = 89.0f;
-			if (_pitch < -89.0f)
-				_pitch = -89.0f;
-			glm::vec3 front;
-			front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-			front.y = sin(glm::radians(_pitch));
-			front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-			_front = glm::normalize(front);
-
-		}
-
-		_viewMatrix = glm::lookAt(_position, _front+_position, glm::vec3(0.0, 1.0, 0.0));
-		_projMatrix = glm::perspective((1 + zoom*0.05f)*glm::radians(_fov), _aspect, _near, _far);
-	}
+}
 
 	/*!
 	* move camera
 	*/
-	void positionUpdate(glm::vec3 newPosition);
+
 };
