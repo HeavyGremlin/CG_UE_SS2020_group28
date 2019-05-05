@@ -81,7 +81,8 @@ void Geometry::transform(glm::mat4 transformation)
 {
 	_modelMatrix = glm::rotate(degree, (rotationAxis * _modelMatrix)) * _modelMatrix;
 }*/
- /*glm::mat4 getModelMatrix()
+
+/*static glm::mat4 getModelMatrix()
 {
 	return _modelMatrix;
 }*/

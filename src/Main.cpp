@@ -47,6 +47,7 @@ static bool _rotateLeft = false;
 static bool _rotateRight = false;
 static bool _spinRight = false;
 static bool _spinLeft = false;
+static bool _reset = false;
 
 
 /* --------------------------------------------- */
@@ -166,7 +167,7 @@ int main(int argc, char** argv)
 
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
-		camera.insertValues(fov, float(window_width) / float(window_height), nearZ, farZ);
+		camera.insertValues(fov, window_width, window_height, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
 		PointLight pointL(glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
@@ -190,9 +191,10 @@ int main(int argc, char** argv)
 				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
 			}
 			if (_rotateForward) {
-				cube.transform(glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
-				//std::cout << "matrix" + glm::to_string(cube.getModelMatrix()) << std::endl;
-				//cube.rotate(-0.0005f, glm::vec3(1.0f,0.0f,0.0f));
+				//glm::mat4 oldPosition = cube.getModelMatrix();
+				//glm::mat4 rotation = oldPosition * glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f));
+				glm::mat4 rotation = glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f));
+				cube.transform(rotation);
 			}
 			if (_rotateBackward) {
 				cube.transform(glm::rotate(0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
@@ -208,6 +210,9 @@ int main(int argc, char** argv)
 			}
 			if (_spinLeft) {
 				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+			}
+			if (_reset) {
+				cube.resetModelMatrix();
 			}
 
 
@@ -337,6 +342,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_Q:
 			if (action == GLFW_RELEASE) _spinLeft = false;
 			else _spinLeft = true;
+			break;
+		case GLFW_KEY_X:
+			if (action == GLFW_RELEASE) _reset = false;
+			else _reset = true;
 			break;
 	}
 }

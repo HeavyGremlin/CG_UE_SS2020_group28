@@ -104,7 +104,8 @@ public:
 	 * @param transformation: the transformation matrix to be applied to the object
 	 */
 	//void rotate(float degree, glm::vec3 rotationAxis);
-	//glm::mat4 getModelMatrix();
+
+	//static glm::mat4 getModelMatrix();
 
 	/*!
 	 * Resets the model matrix to the identity matrix
