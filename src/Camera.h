@@ -46,7 +46,7 @@ public:
 	 * @param near: near plane
 	 * @param far: far plane
 	 */
-	Camera(float fov, int window_height, int window_width, float aspect, float near, float far);
+	Camera(float fov,float aspect, float near, float far);
 	~Camera();
 
 	/*!
@@ -89,10 +89,8 @@ public:
 private:
 	glm::vec3 get_arcball_vector(int x, int y);
 
-}
+};
 
 	/*!
 	* move camera
 	*/
-
-};
