@@ -18,6 +18,9 @@
 #include <iostream>
 #include "glm/ext.hpp"
 
+// MY includes
+#include <string>
+
 
 /* --------------------------------------------- */
 // Prototypes
@@ -48,11 +51,14 @@ static bool _rotateRight = false;
 static bool _spinRight = false;
 static bool _spinLeft = false;
 static int _camera = 2;
+static bool _reset = false;
 
 
 /* --------------------------------------------- */
 // Main
 /* --------------------------------------------- */
+
+using namespace std;
 
 int main(int argc, char** argv)
 {
@@ -162,11 +168,12 @@ int main(int argc, char** argv)
 
 		// Create geometry
 		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
-		//Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
+		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
 		Geometry ship = Geometry(glm::mat4(1.0f), Geometry::createOBJGeometry, "");
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
+		camera.insertValues(fov, window_width, window_height, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
@@ -185,6 +192,19 @@ int main(int argc, char** argv)
 			// Poll events
 			glfwPollEvents();
 
+
+			// print cameraPosition to console
+			glm::vec3 cameraPosition = camera.getPosition();
+			cout << "cameraPosition\n";
+			cout << glm::to_string(cameraPosition) << std::endl;
+			cout << "\n\n";
+
+			// print cubeMatrix to console
+			//glm::mat4 cubeMatrix = cube.getModelMatrix();
+			cout << "cubeMatrix\n";
+			//cout << glm::to_string(cubeMatrix) << std::endl;
+			cout << "\n\n";
+
 			// Update Objects
 			if (_accalerate) {
 				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
@@ -192,8 +212,6 @@ int main(int argc, char** argv)
 			}
 			if (_rotateForward) {
 				cube.transform(glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
-				//std::cout << "matrix" + glm::to_string(cube.getModelMatrix()) << std::endl;
-				//cube.rotate(-0.0005f, glm::vec3(1.0f,0.0f,0.0f));
 			}
 			if (_rotateBackward) {
 				cube.transform(glm::rotate(0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
@@ -209,6 +227,10 @@ int main(int argc, char** argv)
 			}
 			if (_spinLeft) {
 				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+			}
+			if (_reset) {
+				//camera.;
+				cube.resetModelMatrix();
 			}
 
 
@@ -228,6 +250,7 @@ int main(int argc, char** argv)
 
 			// Render
 			cube.draw();
+			cylinder.draw();
 			sphere.draw();
 
 			// Compute frame time
@@ -345,6 +368,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_Q:
 			if (action == GLFW_RELEASE) _spinLeft = false;
 			else _spinLeft = true;
+			break;
+		case GLFW_KEY_X:
+			if (action == GLFW_RELEASE) _reset = false;
+			else _reset = true;
 			break;
 	}
 }

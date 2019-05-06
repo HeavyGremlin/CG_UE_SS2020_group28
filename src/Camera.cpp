@@ -5,6 +5,7 @@ void Camera::positionUpdate(glm::vec3 newPosition) {
 	_viewMatrix = glm::lookAt(_position, _front + _position, glm::vec3(0.0, 1.0, 0.0));
 
 }
+
 void Camera::updates(int x, int y, float zoom, bool dragging, bool strafing) {
 	if (dragging) {
 		if (_firstMouse) {
