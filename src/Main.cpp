@@ -170,13 +170,16 @@ int main(int argc, char** argv)
 		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
-		Geometry ship = Geometry(glm::mat4(1.0f), Geometry::createOBJGeometry, "");
+		Geometry userShip = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/testship.obj"), woodTextureMaterial);
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
 		PointLight pointL(glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
+		PointLight pointL2(glm::vec3(-1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
+
+		//Initialize text overlay
 
 		// Render loop
 		float t = float(glfwGetTime());
@@ -199,7 +202,7 @@ int main(int argc, char** argv)
 			cout << "\n\n";
 
 			// print cubeMatrix to console
-			//glm::mat4 cubeMatrix = cube.getModelMatrix();
+			glm::mat4 cubeMatrix = cube.getModelMatrix();
 			cout << "cubeMatrix\n";
 			//cout << glm::to_string(cubeMatrix) << std::endl;
 			cout << "\n\n";
@@ -251,6 +254,7 @@ int main(int argc, char** argv)
 			cube.draw();
 			cylinder.draw();
 			sphere.draw();
+			userShip.draw();
 
 			// Compute frame time
 
