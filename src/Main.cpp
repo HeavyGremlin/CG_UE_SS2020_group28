@@ -13,7 +13,7 @@
 #include "Material.h"
 #include "Light.h"
 #include "Texture.h"
-
+#include"PxPhysicsAPI.h"
 
 #include <iostream>
 #include "glm/ext.hpp"
@@ -41,12 +41,6 @@ static bool _dragging = false;
 static bool _strafing = false;
 static float _zoom = 6.0f;
 static bool _accalerate = false;
-static bool _rotateForward = false;
-static bool _rotateBackward = false;
-static bool _rotateLeft = false;
-static bool _rotateRight = false;
-static bool _spinRight = false;
-static bool _spinLeft = false;
 
 
 /* --------------------------------------------- */
@@ -166,7 +160,7 @@ int main(int argc, char** argv)
 
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
-		camera.insertValues(fov, float(window_width) / float(window_height), nearZ, farZ);
+		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
 		PointLight pointL(glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
@@ -213,7 +207,14 @@ int main(int argc, char** argv)
 
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
+			if (_camera == 2) {
+				camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
+			}
 			camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
+			if (_accalerate) {
+				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
+			}
       
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
