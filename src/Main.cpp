@@ -50,8 +50,8 @@ static bool _rotateLeft = false;
 static bool _rotateRight = false;
 static bool _spinRight = false;
 static bool _spinLeft = false;
-static int _camera = 2;
 static bool _reset = false;
+static int _camera = 2;
 
 
 /* --------------------------------------------- */
@@ -173,7 +173,6 @@ int main(int argc, char** argv)
 		Geometry ship = Geometry(glm::mat4(1.0f), Geometry::createOBJGeometry, "");
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
-		camera.insertValues(fov, window_width, window_height, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
