@@ -198,9 +198,9 @@ int main(int argc, char** argv)
 			cout << "\n\n";
 
 			// print cubeMatrix to console
-			glm::mat4 cubeMatrix = cube.getModelMatrix();
+			//glm::mat4 cubeMatrix = cube.getModelMatrix();
 			cout << "cubeMatrix\n";
-			cout << glm::to_string(cubeMatrix) << std::endl;
+			//cout << glm::to_string(cubeMatrix) << std::endl;
 			cout << "\n\n";
 
 			// Update Objects
