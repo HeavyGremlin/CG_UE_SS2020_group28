@@ -14,7 +14,8 @@
 #include "Light.h"
 #include "Texture.h"
 #include"PxPhysicsAPI.h"
-
+#include <ft2build.h>
+#include FT_FREETYPE_H 
 #include <iostream>
 #include "glm/ext.hpp"
 
