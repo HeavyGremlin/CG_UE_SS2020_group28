@@ -195,10 +195,16 @@ int main(int argc, char** argv)
 
 			// Update Objects
 			if (_accalerateNegative) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
 				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.01f)));
 				camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
 			}
 			if (_accalerate) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
 				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
 				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
 			}
