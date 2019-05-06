@@ -13,7 +13,7 @@
 #include "Material.h"
 #include "Light.h"
 #include "Texture.h"
-
+#include"PxPhysicsAPI.h"
 
 #include <iostream>
 #include "glm/ext.hpp"
@@ -52,6 +52,7 @@ static bool _rotateRight = false;
 static bool _spinRight = false;
 static bool _spinLeft = false;
 static bool _reset = false;
+static int _camera = 2;
 static bool _coutINFO = false;
 int INFO_count = 0;
 
@@ -172,13 +173,16 @@ int main(int argc, char** argv)
 		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
-
+		Geometry userShip = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/testship.obj"), woodTextureMaterial);
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
-		camera.insertValues(fov, window_width, window_height, float(window_width) / float(window_height), nearZ, farZ);
+		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
 		// Initialize lights
 		DirectionalLight dirL(glm::vec3(0.8f), glm::vec3(0.0f, -1.0f, -1.0f));
 		PointLight pointL(glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
+		PointLight pointL2(glm::vec3(-1.0f), glm::vec3(0.0f), glm::vec3(1.0f, 0.4f, 0.1f));
+
+		//Initialize text overlay
 
 		// Render loop
 		float t = float(glfwGetTime());
@@ -192,6 +196,19 @@ int main(int argc, char** argv)
 
 			// Poll events
 			glfwPollEvents();
+
+
+			// print cameraPosition to console
+			glm::vec3 cameraPosition = camera.getPosition();
+			cout << "cameraPosition\n";
+			cout << glm::to_string(cameraPosition) << std::endl;
+			cout << "\n\n";
+
+			// print cubeMatrix to console
+			glm::mat4 cubeMatrix = cube.getModelMatrix();
+			cout << "cubeMatrix\n";
+			//cout << glm::to_string(cubeMatrix) << std::endl;
+			cout << "\n\n";
 
 			// Update Objects
 			if (_accalerateNegative) {
@@ -329,7 +346,14 @@ int main(int argc, char** argv)
 
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
+			if (_camera == 2) {
+				camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
+			}
 			camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
+			if (_accalerate) {
+				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
+			}
       
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
@@ -338,6 +362,7 @@ int main(int argc, char** argv)
 			cube.draw();
 			cylinder.draw();
 			sphere.draw();
+			userShip.draw();
 
 			// Compute frame time
 
