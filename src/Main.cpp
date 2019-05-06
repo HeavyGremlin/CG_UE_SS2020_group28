@@ -199,31 +199,33 @@ int main(int argc, char** argv)
 
 
 			// print cameraPosition to console
-			glm::vec3 cameraPosition = camera.getPosition();
-			cout << "cameraPosition\n";
-			cout << glm::to_string(cameraPosition) << std::endl;
+			glm::vec3 cameraPositionOLD = camera.getPosition();
+			cout << "cameraPositionOLD\n";
+			cout << glm::to_string(cameraPositionOLD) << std::endl;
 			cout << "\n\n";
 
 			// print cubeMatrix to console
-			glm::mat4 cubeMatrix = cube.getModelMatrix();
-			cout << "cubeMatrix\n";
-			//cout << glm::to_string(cubeMatrix) << std::endl;
+			glm::mat4 cubeMatrixOLD = cube.getModelMatrix();
+			cout << "cubeMatrixOLD\n";
+			cout << glm::to_string(cubeMatrixOLD) << std::endl;
 			cout << "\n\n";
 
 			// Update Objects
 			if (_accalerateNegative) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-
-				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.01f)));
-				camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, 0.01f, 0.0f);
+				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
+				cube.transform(glm::translate(glm::mat4(1.0f), vector));
+				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
 			}
 			if (_accalerate) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-
-				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
-				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, -0.01f, 0.0f);
+				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
+				cube.transform(glm::translate(glm::mat4(1.0f), vector));
+				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
 			}
 			if (_rotateForward) {
 				// cubeMatrix
@@ -350,10 +352,17 @@ int main(int argc, char** argv)
 				camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
 			}
 			camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
-			if (_accalerate) {
+			/*if (_accalerate) {
 				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
 				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
-			}
+			}*/
+
+			glm::mat4 cubeMatrixNEW = cube.getModelMatrix();
+			glm::vec3 vector = glm::vec3(cubeMatrixNEW[3][0], cubeMatrixNEW[3][1] + 1.0f, cubeMatrixNEW[3][2] + 7.0f);
+
+			//glm::mat4 viewMatrix = glm::lookAt(vector, vector, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			camera.positionUpdate(vector);
       
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
