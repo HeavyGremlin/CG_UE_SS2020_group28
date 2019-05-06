@@ -135,4 +135,6 @@ public:
 	 * @return all sphere data
 	 */
 	static GeometryData createSphereGeometry(unsigned int longitudeSegments, unsigned int latitudeSegments, float radius);
+
+	static GeometryData createOBJGeometry(const char * path);
 };

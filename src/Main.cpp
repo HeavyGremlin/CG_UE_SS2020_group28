@@ -41,6 +41,13 @@ static bool _dragging = false;
 static bool _strafing = false;
 static float _zoom = 6.0f;
 static bool _accalerate = false;
+static bool _rotateForward = false;
+static bool _rotateBackward = false;
+static bool _rotateLeft = false;
+static bool _rotateRight = false;
+static bool _spinRight = false;
+static bool _spinLeft = false;
+static int _camera = 2;
 
 
 /* --------------------------------------------- */
@@ -157,7 +164,7 @@ int main(int argc, char** argv)
 		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		//Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
-
+		Geometry ship = Geometry(glm::mat4(1.0f), Geometry::createOBJGeometry, "");
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
