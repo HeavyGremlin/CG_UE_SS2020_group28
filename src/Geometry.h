@@ -77,6 +77,7 @@ protected:
 	glm::mat4 _modelMatrix;
 
 public:
+
 	/*!
 	 * Geometry object constructor
 	 * Creates VAO and VBOs and binds them
@@ -102,7 +103,15 @@ public:
 	///*!
 	// * @return the modelMatrix of the Geometry
 	// */
-	glm::mat4 getModelMatrix() { return _modelMatrix; }
+	//glm::mat4 getModelMatrix();
+
+	glm::mat4 Geometry::getModelMatrix()
+	{
+		// print cubeMatrix to console
+		//cout << "geometry.h\n";
+		return _modelMatrix;
+		//return glm::mat4(1);
+	}
 
 	/*!
 	 * Resets the model matrix to the identity matrix

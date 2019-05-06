@@ -82,14 +82,14 @@ void Geometry::transform(glm::mat4 transformation)
 	_modelMatrix = glm::rotate(degree, (rotationAxis * _modelMatrix)) * _modelMatrix;
 }*/
 //
-glm:: mat4 Geometry::getModelMatrix()
-{
-	// print cubeMatrix to console
-	cout << "geometry.cpp\n";
-	//return glm::mat4(_modelMatrix);
-	return glm::mat4(1);
-}
-glm::vec3 Camera::getPosition()
+//glm::mat4 Geometry::getModelMatrix()
+//{
+//	// print cubeMatrix to console
+//	cout << "geometry.cpp\n";
+//	return glm::mat4(_modelMatrix);
+//	//return glm::mat4(1);
+//}
+/*glm::vec3 Camera::getPosition()
 {
 	return glm::vec3();
 }

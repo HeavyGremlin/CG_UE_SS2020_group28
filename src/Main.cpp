@@ -44,6 +44,7 @@ static bool _dragging = false;
 static bool _strafing = false;
 static float _zoom = 6.0f;
 static bool _accalerate = false;
+static bool _accalerateNegative = false;
 static bool _rotateForward = false;
 static bool _rotateBackward = false;
 static bool _rotateLeft = false;
@@ -52,6 +53,8 @@ static bool _spinRight = false;
 static bool _spinLeft = false;
 static bool _reset = false;
 static int _camera = 2;
+static bool _coutINFO = false;
+int INFO_count = 0;
 
 
 /* --------------------------------------------- */
@@ -208,33 +211,132 @@ int main(int argc, char** argv)
 			cout << "\n\n";
 
 			// Update Objects
+			if (_accalerateNegative) {
+				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.01f)));
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
+			}
 			if (_accalerate) {
 				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
 				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
 			}
 			if (_rotateForward) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
+				//cubePosition
+				glm::vec3 cubePosition = cubeMatrix[3];
+
+				//worldCenterPosition
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
+
+				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
 				cube.transform(glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateBackward) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
+				//cubePosition
+				glm::vec3 cubePosition = cubeMatrix[3];
+
+				//worldCenterPosition
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
+
+				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
 				cube.transform(glm::rotate(0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateRight) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
+				//cubePosition
+				glm::vec3 cubePosition = cubeMatrix[3];
+
+				//worldCenterPosition
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
+
+				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
 				cube.transform(glm::rotate(-0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateLeft) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
+				//cubePosition
+				glm::vec3 cubePosition = cubeMatrix[3];
+
+				//worldCenterPosition
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
+
+				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
 				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinRight) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
+				//cubePosition
+				glm::vec3 cubePosition = cubeMatrix[3];
+
+				//worldCenterPosition
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
+
+				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
 				cube.transform(glm::rotate(-0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinLeft) {
+				// cubeMatrix
+				glm::mat4 cubeMatrix = cube.getModelMatrix();
+
+				//cubePosition
+				glm::vec3 cubePosition = cubeMatrix[3];
+
+				//worldCenterPosition
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
+
+				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
 				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_reset) {
-				//camera.;
+				// cameraPosition
+				/*glm::vec3 cameraPosition = camera.getPosition();
+				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cameraPosition;
+				camera.positionUpdate(worldCenterPosition);*/
+
 				cube.resetModelMatrix();
 			}
 
+			//show object info
+			if (_coutINFO) {
+				// print cameraPosition to console
+					glm::vec3 cameraPosition = camera.getPosition();
+					cout << "cameraPosition\n";
+					cout << glm::to_string(cameraPosition) << std::endl;
+					cout << "\n\n";
+
+				// print cubeMatrix to console
+					glm::mat4 cubeMatrix = cube.getModelMatrix();
+					cout << "cubeMatrix\n";
+					cout << glm::to_string(cubeMatrix) << std::endl;
+					cout << "\n\n";
+
+				// print cubePosition to console
+					glm::vec3 cubePosition = glm::vec3(cubeMatrix[3][0], cubeMatrix[3][1], cubeMatrix[3][2]);
+					cout << "cubePosition\n";
+					cout << glm::to_string(cubePosition) << std::endl;
+					cout << "\n\n";
+
+
+				/*printCameraPosition(camera);
+				printCubeMatrix(cube);
+				printCubePosition(cube);*/
+			}
 
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
@@ -285,6 +387,31 @@ int main(int argc, char** argv)
 
 	return EXIT_SUCCESS;
 }
+
+//// print cameraPosition to console
+//void printCameraPosition(Camera camera) {
+//	glm::vec3 cameraPosition = camera.getPosition();
+//	cout << "cameraPosition\n";
+//	cout << glm::to_string(cameraPosition) << std::endl;
+//	cout << "\n\n";
+//}
+//
+//// print cubeMatrix to console
+//void printCubeMatrix(Geometry cube) {
+//	glm::mat4 cubeMatrix = cube.getModelMatrix();
+//	cout << "cubeMatrix\n";
+//	cout << glm::to_string(cubeMatrix) << std::endl;
+//	cout << "\n\n";
+//}
+//
+//// print cubePosition to console
+//void printCubePosition(Geometry cube) {
+//	glm::mat4 cubeMatrix = cube.getModelMatrix();
+//	glm::vec3 cubePosition = glm::vec3(cubeMatrix[3][0], cubeMatrix[3][1], cubeMatrix[3][2]);
+//	cout << "cubePosition\n";
+//	cout << glm::to_string(cubePosition) << std::endl;
+//	cout << "\n\n";
+//}
 
 
 void setPerFrameUniforms(Shader* shader, Camera& camera, DirectionalLight& dirL, PointLight& pointL)
@@ -348,6 +475,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			if (action == GLFW_RELEASE) _accalerate = false;
 			else _accalerate = true;
 			break;
+		case GLFW_KEY_B:
+			if (action == GLFW_RELEASE) _accalerateNegative = false;
+			else _accalerateNegative = true;
+			break;
 		case GLFW_KEY_W:
 			if (action == GLFW_RELEASE) _rotateForward = false;
 			else _rotateForward = true;
@@ -375,6 +506,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		case GLFW_KEY_X:
 			if (action == GLFW_RELEASE) _reset = false;
 			else _reset = true;
+			break;
+		case GLFW_KEY_I:
+			if (action == GLFW_RELEASE) {
+				INFO_count = 0;
+				_coutINFO = false;
+			} else if (INFO_count == 0) {
+				INFO_count = 1;
+				_coutINFO = true; 
+			} else {
+				_coutINFO = false;
+			}
 			break;
 	}
 }
