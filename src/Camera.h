@@ -86,6 +86,12 @@ public:
 	void updates(int x, int y, float zoom, bool dragging, bool strafing);
 	void updatesArcball(int x, int y, float zoom, bool dragging, bool strafing);
 	void positionUpdate(glm::vec3 newPosition);
+
+	//myPositionUpdate(glm::vec3 newPosition);
+	void myPositionUpdate(glm::vec3 newPosition);
+	void myUpdates(glm::vec3 newPosition, glm::vec3 newFront);
+
+
 private:
 	glm::vec3 get_arcball_vector(int x, int y);
 
