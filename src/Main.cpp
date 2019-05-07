@@ -815,3 +815,4 @@ static long milliseconds_now() {
 		return GetTickCount();
 	}
 }
+
