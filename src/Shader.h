@@ -70,6 +70,9 @@ public:
 	 */
 	Shader();
 
+	GLuint getHandle() {
+		return _handle;
+	}
 	/*!
 	 * Shader constructor with specified vertex and fragment shader
 	 * Loads and compiles the shader
