@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 	{
 		// Load shader(s)
 		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("texture.vert", "texture.frag");
-
+		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("HUD.vertex", "HUD.fragment");
 		// Create textures
 		std::shared_ptr<Texture> woodTexture = std::make_shared<Texture>("wood_texture.dds");
 		std::shared_ptr<Texture> brickTexture = std::make_shared<Texture>("bricks_diffuse.dds");
