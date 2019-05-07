@@ -175,10 +175,12 @@ int main(int argc, char** argv)
 		std::shared_ptr<Material> brickTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 8.0f, brickTexture);
 
 		// Create geometry
-		Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
+		// Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
-		Geometry userShip = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/testship.obj"), woodTextureMaterial);
+		// create userShip as cube
+		Geometry cube = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/testship.obj"), woodTextureMaterial);
+		
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
@@ -212,7 +214,7 @@ int main(int argc, char** argv)
 			if (_accalerateNegative) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, 0.01f, 0.0f);
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, 0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
@@ -220,7 +222,7 @@ int main(int argc, char** argv)
 			if (_accalerate) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, -0.01f, 0.0f);
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, -0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
@@ -236,7 +238,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.001f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(-0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateBackward) {
@@ -250,7 +252,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.001f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateRight) {
@@ -264,7 +266,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(-0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateLeft) {
@@ -278,7 +280,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinRight) {
@@ -292,7 +294,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.001f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(-0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinLeft) {
@@ -306,7 +308,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.001f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_reset) {
@@ -367,7 +369,9 @@ int main(int argc, char** argv)
 
 			cylinder.draw();
 			sphere.draw();
-			userShip.draw();
+
+			// *******userShip is rendered as cube at the moment*******
+			//userShip.draw();
 
 
 
