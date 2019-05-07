@@ -23,7 +23,20 @@
 
 // MY includes
 #include <string>
+using namespace physx;
 
+PxDefaultAllocator		gAllocator;
+PxDefaultErrorCallback	gErrorCallback;
+
+PxFoundation*			gFoundation = NULL;
+PxPhysics*				gPhysics = NULL;
+
+PxDefaultCpuDispatcher*	gDispatcher = NULL;
+PxScene*				gScene = NULL;
+
+PxMaterial*				gMaterial = NULL;
+
+PxPvd*                  gPvd = NULL;
 
 /* --------------------------------------------- */
 // Prototypes
