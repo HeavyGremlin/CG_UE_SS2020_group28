@@ -7,7 +7,7 @@ void FontCharacter::initialize() {
 	FT_Face face;
 	if (FT_New_Face(ft, "fonts/Helvetica.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-	FT_Set_Pixel_Sizes(face, 0, 24);
+	FT_Set_Pixel_Sizes(face, 0, 0.000000005);
 	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
 		std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 
@@ -69,6 +69,8 @@ void FontCharacter::RenderText(std::shared_ptr<Shader> &s, std::string text, GLf
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(_VAO);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Iterate through all characters
 	std::string::const_iterator c;

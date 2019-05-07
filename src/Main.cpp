@@ -154,7 +154,7 @@ int main(int argc, char** argv)
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// set GL defaults
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
@@ -165,7 +165,6 @@ int main(int argc, char** argv)
 	{
 		// Load shader(s)
 		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("texture.vert", "texture.frag");
-		std::shared_ptr<Shader> overlayShader = std::make_shared<Shader>("HUD.vertex", "HUD.fragment");
 
 		// Create textures
 		std::shared_ptr<Texture> woodTexture = std::make_shared<Texture>("wood_texture.dds");
@@ -361,16 +360,16 @@ int main(int argc, char** argv)
       
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
-			setPerFrameUniforms2D(overlayShader.get(), glm::vec3(0.5, 0.8f, 0.2f));
 
 			// Render
+
 			cube.draw();
+
 			cylinder.draw();
 			sphere.draw();
 			userShip.draw();
 
-			font.RenderText(overlayShader, "This is sample text", 25.0f, 25.0f, 1.0f);
-			font.RenderText(overlayShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f);
+
 
 			// Compute frame time
 
@@ -439,11 +438,6 @@ void setPerFrameUniforms(Shader* shader, Camera& camera, DirectionalLight& dirL,
 	shader->setUniform("pointL.color", pointL.color);
 	shader->setUniform("pointL.position", pointL.position);
 	shader->setUniform("pointL.attenuation", pointL.attenuation);
-}
-void setPerFrameUniforms2D(Shader* shader, glm::vec3 color) {
-	shader->use();
-	GLuint handle = shader->getHandle();
-	glUniform3f(glGetUniformLocation(handle, "textColor"), color.x, color.y, color.z);
 }
 
 
