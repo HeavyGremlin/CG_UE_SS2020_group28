@@ -35,7 +35,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setPerFrameUniforms(Shader* shader, Camera& camera, DirectionalLight& dirL, PointLight& pointL);
-
+static long milliseconds_now();
 
 /* --------------------------------------------- */
 // Global variables
@@ -58,6 +58,8 @@ static bool _reset = false;
 static int _camera = 2;
 static bool _coutINFO = false;
 int INFO_count = 0;
+const int FRAMES_PER_SECOND = 60;
+const int SKIP_TICKS = 1000 / FRAMES_PER_SECOND;
 
 
 /* --------------------------------------------- */
@@ -154,7 +156,7 @@ int main(int argc, char** argv)
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// set GL defaults
-	glClearColor(0, 0, 0, 1);
+	glClearColor(0.5f, 0.5f, 0.5f, 1);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
@@ -169,18 +171,20 @@ int main(int argc, char** argv)
 		// Create textures
 		std::shared_ptr<Texture> woodTexture = std::make_shared<Texture>("wood_texture.dds");
 		std::shared_ptr<Texture> brickTexture = std::make_shared<Texture>("bricks_diffuse.dds");
+		std::shared_ptr<Texture> ringTexture = std::make_shared<Texture>("ringtex.dds");
 
 		// Create materials
 		std::shared_ptr<Material> woodTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.1f), 2.0f, woodTexture);
 		std::shared_ptr<Material> brickTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 8.0f, brickTexture);
-
+		std::shared_ptr<Material> ringTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 1.0, ringTexture);
 		// Create geometry
 		// Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
 		// create userShip as cube
 		Geometry cube = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/testship.obj"), woodTextureMaterial);
-		
+		Geometry ring = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f)), Geometry::createOBJGeometry("assets/objects/ring.obj"), ringTextureMaterial);
+		ring.transform(glm::rotate(1.0f, glm::vec3(0.0f, 1.0f, 0.0f)));
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
@@ -198,23 +202,24 @@ int main(int argc, char** argv)
 		double mouse_x, mouse_y;
 
 		while (!glfwWindowShouldClose(window)) {
+			float timeMultiplicator = dt * 1000;
+			cout << SKIP_TICKS << endl;
 			// Clear backbuffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Poll events
 			glfwPollEvents();
-
+			long long start = milliseconds_now();
 
 			// print cameraPosition to console
 			glm::vec3 cameraPositionOLD = camera.getPosition();
 			// print cubeMatrix to console
 			glm::mat4 cubeMatrixOLD = cube.getModelMatrix();
-
 			// Update Objects
 			if (_accalerateNegative) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, 0.0075f, 0.0f);
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, timeMultiplicator * 0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
@@ -222,7 +227,7 @@ int main(int argc, char** argv)
 			if (_accalerate) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, -0.0075f, 0.0f);
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, timeMultiplicator*-0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
@@ -238,7 +243,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(timeMultiplicator* -0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateBackward) {
@@ -252,7 +257,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(timeMultiplicator*0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateRight) {
@@ -266,7 +271,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(timeMultiplicator*-0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateLeft) {
@@ -280,7 +285,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(timeMultiplicator*0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinRight) {
@@ -294,7 +299,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(timeMultiplicator*-0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinLeft) {
@@ -308,7 +313,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(timeMultiplicator*0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_reset) {
@@ -369,6 +374,7 @@ int main(int argc, char** argv)
 
 			cylinder.draw();
 			sphere.draw();
+			ring.draw();
 
 			// *******userShip is rendered as cube at the moment*******
 			//userShip.draw();
@@ -384,6 +390,8 @@ int main(int argc, char** argv)
 
 			// Swap buffers
 			glfwSwapBuffers(window);
+			long long elapsed = milliseconds_now() - start;
+			std::cout << dt*-0.0075 << std::endl;
 
 		}
 	}
@@ -649,4 +657,16 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 	stringStream << ", ID = " << id << "]";
 
 	return stringStream.str();
+}
+static long milliseconds_now() {
+	static LARGE_INTEGER s_frequency;
+	static BOOL s_use_qpc = QueryPerformanceFrequency(&s_frequency);
+	if (s_use_qpc) {
+		LARGE_INTEGER now;
+		QueryPerformanceCounter(&now);
+		return (1000LL * now.QuadPart) / s_frequency.QuadPart;
+	}
+	else {
+		return GetTickCount();
+	}
 }
