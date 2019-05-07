@@ -179,12 +179,31 @@ int main(int argc, char** argv)
 		std::shared_ptr<Material> ringTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 1.0, ringTexture);
 		// Create geometry
 		 //Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
-		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
-		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
+		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-10.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
+		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
 		// create userShip as cube
 		Geometry cube = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/testship.obj"), woodTextureMaterial);
-		Geometry ring = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f)), Geometry::createOBJGeometry("assets/objects/ring.obj"), ringTextureMaterial);
-		ring.transform(glm::rotate(1.0f, glm::vec3(0.0f, 1.0f, 0.0f)));
+		// create rings
+		// ring1
+		Geometry ring1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/ring.obj"), ringTextureMaterial);
+		ring1.transform(glm::rotate(1.0f, glm::vec3(0.0f, 1.0f, 0.0f)));
+		ring1.transform(glm::translate(glm::mat4(1.0f), glm::vec3(20.0f, 0.0f, -35.0f)));
+		// ring2
+		Geometry ring2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/ring.obj"), ringTextureMaterial);
+		ring2.transform(glm::rotate(4.0f, glm::vec3(2.0f, 1.0f, 0.0f)));
+		ring2.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 20.0f, -60.0f)));
+		// ring3
+		Geometry ring3 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createOBJGeometry("assets/objects/ring.obj"), ringTextureMaterial);
+		ring3.transform(glm::rotate(2.0f, glm::vec3(0.0f, 1.0f, 1.0f)));
+		ring3.transform(glm::translate(glm::mat4(1.0f), glm::vec3(-15.0f, 0.0f, -40.0f)));
+		// create moving spheres
+		// sphere1
+		Geometry sphere1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-10.0f, -10.0f, -25.0f)), Geometry::createSphereGeometry(30, 15, 1.0f), brickTextureMaterial);
+		// sphere2
+		Geometry sphere2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, -25.0f)), Geometry::createSphereGeometry(30, 15, 1.0f), woodTextureMaterial);
+		
+		
+		
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
 		camera.insertValues(fov, window_height, window_width, float(window_width) / float(window_height), nearZ, farZ);
@@ -205,6 +224,10 @@ int main(int argc, char** argv)
 
 		// targetFpsTime = 1000/60 -> 60 FPS
 		float targetFpsTime = 1000 / 60;
+
+		// sphere booleans
+		bool spehere2Forward = true;
+		bool spehere1Forward = true;
 
 		while (!glfwWindowShouldClose(window)) {
       
@@ -246,14 +269,46 @@ int main(int argc, char** argv)
 			glm::vec3 cameraPositionOLD = camera.getPosition();
 			// print cubeMatrix to console
 			glm::mat4 cubeMatrixOLD = cube.getModelMatrix();
+
+
 			// Update Objects
+			glm::mat4 sphere1Matrix = sphere1.getModelMatrix();
+			glm::vec3 positionSphere1 = glm::vec3(sphere1Matrix[3]);
+			if ((positionSphere1[0] < 10.0f  && positionSphere1[2] < -15.0f) && spehere1Forward) {
+				glm::vec4 transformedVector = sphere1Matrix * glm::vec4(timeMultiplicator*0.006f, 0.0f, timeMultiplicator*0.006f, 0.0f);
+				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
+				sphere1.transform(glm::translate(glm::mat4(1.0f), vector));
+			}
+			else {
+				spehere1Forward = false;
+				if (positionSphere1[0] <= -10.0f && positionSphere1[2] <= -25.0f) spehere1Forward = true;
+				glm::vec4 transformedVector = sphere1Matrix * glm::vec4(timeMultiplicator*-0.006f, 0.0f, timeMultiplicator*-0.006f, 0.0f);
+				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
+				sphere1.transform(glm::translate(glm::mat4(1.0f), vector));
+			}
+
+			glm::mat4 sphere2Matrix = sphere2.getModelMatrix();
+			glm::vec3 positionSphere2 = glm::vec3(sphere2Matrix[3]);
+			if ((positionSphere2[1] > -10.0f  && positionSphere2[2] > -25.0f) && spehere2Forward) {
+				glm::vec4 transformedVector = sphere2Matrix * glm::vec4(0.0f, timeMultiplicator*-0.006f, timeMultiplicator*-0.006f, 0.0f);
+				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
+				sphere2.transform(glm::translate(glm::mat4(1.0f), vector));
+			}
+			else {
+				spehere2Forward = false;
+				if (positionSphere2[1] >= 10.0f && positionSphere2[2] >= -15.0f) spehere2Forward = true;
+				glm::vec4 transformedVector = sphere2Matrix * glm::vec4(0.0f, timeMultiplicator*0.006f, timeMultiplicator*0.006f, 0.0f);
+				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
+				sphere2.transform(glm::translate(glm::mat4(1.0f), vector));
+			}
+
+
 			if (_accalerateNegative) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
 				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, timeMultiplicator * 0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
-				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
 			}
 			if (_accalerate) {
 				// cubeMatrix
@@ -261,7 +316,6 @@ int main(int argc, char** argv)
 				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, timeMultiplicator*-0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
-				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
 			}
 			if (_rotateForward) {
 				// cubeMatrix
@@ -458,7 +512,11 @@ int main(int argc, char** argv)
 
 			cylinder.draw();
 			sphere.draw();
-			ring.draw();
+			ring1.draw();
+			ring2.draw();
+			ring3.draw();
+			sphere1.draw();
+			sphere2.draw();
 
 			// *******userShip is rendered as cube at the moment*******
 			//userShip.draw();
