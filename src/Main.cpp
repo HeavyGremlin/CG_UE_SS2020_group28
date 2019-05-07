@@ -55,6 +55,12 @@ static bool _rotateRight = false;
 static bool _spinRight = false;
 static bool _spinLeft = false;
 static bool _reset = false;
+static bool _cameraUp = false;
+static bool _cameraDown = false;
+static bool _cameraLeft = false;
+static bool _cameraRight = false;
+static bool _cameraForward = false;
+static bool _cameraBackward = false;
 static int _camera = 2;
 static bool _coutINFO = false;
 int INFO_count = 0;
@@ -167,7 +173,7 @@ int main(int argc, char** argv)
 	{
 		// Load shader(s)
 		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("texture.vert", "texture.frag");
-		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("HUD.vertex", "HUD.fragment");
+		std::shared_ptr<Shader> HUDShader = std::make_shared<Shader>("HUD.vertex", "HUD.fragment");
 		// Create textures
 		std::shared_ptr<Texture> woodTexture = std::make_shared<Texture>("wood_texture.dds");
 		std::shared_ptr<Texture> brickTexture = std::make_shared<Texture>("bricks_diffuse.dds");
@@ -353,6 +359,24 @@ int main(int argc, char** argv)
 				camera.positionUpdate(worldCenterPosition);*/
 
 				cube.resetModelMatrix();
+			}
+			if (_cameraUp) {
+				camera.positionUpdate(glm::vec3(0.0f, timeMultiplicator*0.01f, 0.0f));
+			}
+			if (_cameraDown) {
+				camera.positionUpdate(glm::vec3(0.0f, timeMultiplicator*-0.01f, 0.0f));
+			}
+			if (_cameraRight) {
+				camera.positionUpdate(glm::vec3(timeMultiplicator*-0.01f, 0.0f, 0.0f));
+			}
+			if (_cameraLeft) {
+				camera.positionUpdate(glm::vec3(timeMultiplicator*0.01f,0.0f,0.0f));
+			}
+			if (_cameraForward) {
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, timeMultiplicator*-0.01f));
+			}
+			if (_cameraBackward) {
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, float(timeMultiplicator)*0.01f));
 			}
 
 			//show object info
@@ -572,6 +596,31 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			if (action == GLFW_RELEASE) _reset = false;
 			else _reset = true;
 			break;
+		case GLFW_KEY_UP:
+			if (action == GLFW_RELEASE) _cameraUp = false;
+			else _cameraUp = true;
+			break;
+		case GLFW_KEY_DOWN:
+			if (action == GLFW_RELEASE) _cameraDown = false;
+			else _cameraDown = true;
+			break;
+		case GLFW_KEY_LEFT:
+			if (action == GLFW_RELEASE) _cameraLeft = false;
+			else _cameraLeft = true;
+			break;
+		case GLFW_KEY_RIGHT:
+			if (action == GLFW_RELEASE) _cameraRight = false;
+			else _cameraRight = true;
+			break;
+		case GLFW_KEY_PERIOD:
+			if (action == GLFW_RELEASE) _cameraForward = false;
+			else _cameraForward = true;
+			break;
+		case GLFW_KEY_SLASH:
+			if (action == GLFW_RELEASE) _cameraBackward = false;
+			else _cameraBackward = true;
+			break;
+
 		case GLFW_KEY_I:
 			if (action == GLFW_RELEASE) {
 				INFO_count = 0;
