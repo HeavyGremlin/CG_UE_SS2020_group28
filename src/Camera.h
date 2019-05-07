@@ -37,6 +37,7 @@ protected:
 	float _far;
 	bool _firstMouse;
 	glm::vec3 _strafe;
+	bool _inactive = true;
 
 public:
 	/*!
@@ -86,7 +87,7 @@ public:
 	void updates(int x, int y, float zoom, bool dragging, bool strafing);
 	void updatesArcball(int x, int y, float zoom, bool dragging, bool strafing);
 	void positionUpdate(glm::vec3 newPosition);
-
+	void positionUpdateStrafe(float speed);
 	//myPositionUpdate(glm::vec3 newPosition);
 	void myPositionUpdate(glm::vec3 newPosition);
 	void myUpdates(glm::vec3 newPosition, glm::vec3 newFront);

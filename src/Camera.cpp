@@ -10,6 +10,10 @@ void Camera::myPositionUpdate(glm::vec3 newPosition) {
 	_position = newPosition;
 	_viewMatrix = glm::lookAt(_position, _front + _position, glm::vec3(0.0, 1.0, 0.0));
 }
+void Camera::positionUpdateStrafe(float speed) {
+	
+	_position+=glm::normalize(glm::cross(_front, glm::vec3(0.0, 1.0, 0.0))) * speed;
+}
 
 void Camera::myUpdates(glm::vec3 newPosition, glm::vec3 newFront) {
 	_position = newPosition;
@@ -18,14 +22,20 @@ void Camera::myUpdates(glm::vec3 newPosition, glm::vec3 newFront) {
 }
 
 void Camera::updates(int x, int y, float zoom, bool dragging, bool strafing) {
+	if (_firstMouse) {
+		_mouseXFirstP = x;
+		_mouseYFirstP = y;
+		_firstMouse = false;
+	}
 	if (dragging) {
-		if (_firstMouse) {
-			_mouseXFirstP = x;
-			_mouseYFirstP = y;
-			_firstMouse = false;
-		}
 		float xOffset = x - _mouseXFirstP;
 		float yOffset = _mouseYFirstP - y;
+		if (_inactive) {
+			xOffset = 0;
+			yOffset = 0;
+			_inactive = false;
+		}
+
 		_mouseXFirstP = x;
 		_mouseYFirstP = y;
 
@@ -46,6 +56,9 @@ void Camera::updates(int x, int y, float zoom, bool dragging, bool strafing) {
 		front.z = sin(glm::radians(_yawFirstP)) * cos(glm::radians(_pitchFirstP));
 		_front = glm::normalize(front);
 
+	}
+	else {
+		_inactive = true;
 	}
 
 	_viewMatrix = glm::lookAt(_position, _front + _position, glm::vec3(0.0, 1.0, 0.0));
