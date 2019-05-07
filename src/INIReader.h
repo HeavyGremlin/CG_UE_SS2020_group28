@@ -397,6 +397,7 @@ inline long INIReader::GetInteger(string section, string name, long default_valu
     return end > value ? n : default_value;
 }
 
+
 inline double INIReader::GetReal(string section, string name, double default_value)
 {
     string valstr = Get(section, name, "");

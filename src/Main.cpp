@@ -61,6 +61,7 @@ static bool _strafing = false;
 static float _zoom = 6.0f;
 static bool _accalerate = false;
 static bool _accalerateNegative = false;
+static float _acceleration = 0;
 static bool _rotateForward = false;
 static bool _rotateBackward = false;
 static bool _rotateLeft = false;
@@ -98,6 +99,7 @@ int main(int argc, char** argv)
 	int window_width = reader.GetInteger("window", "width", 800);
 	int window_height = reader.GetInteger("window", "height", 800);
 	int refresh_rate = reader.GetInteger("window", "refresh_rate", 60);
+	float brightness = reader.GetInteger("window", "brightness", 50);
 	bool fullscreen = reader.GetBoolean("window", "fullscreen", false);
 	std::string window_title = reader.Get("window", "title", "ECG");
 	float fov = float(reader.GetReal("camera", "fov", 60.0f));
@@ -121,7 +123,6 @@ int main(int argc, char** argv)
 
 	// Enable antialiasing (4xMSAA)
 	glfwWindowHint(GLFW_SAMPLES, 4);
-
 	// Open window
 	GLFWmonitor* monitor = nullptr;
 
@@ -330,6 +331,9 @@ int main(int argc, char** argv)
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 			}
 			if (_accalerate) {
+				if (_acceleration <= 0.3f) {
+					_acceleration += 0.00001f;
+				}
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
 				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, timeMultiplicator*-0.0075f, 0.0f);
@@ -540,6 +544,7 @@ int main(int argc, char** argv)
 			// FPS dependent game update loop deactivated
 			//}
 
+
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
@@ -564,7 +569,6 @@ int main(int argc, char** argv)
 			//t = float(glfwGetTime());
 			//dt = t - dt;
 			//t_sum += dt;
-
 
 			// Swap buffers
 			glfwSwapBuffers(window);
