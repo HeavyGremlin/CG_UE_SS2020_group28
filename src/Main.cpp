@@ -96,6 +96,7 @@ int main(int argc, char** argv)
 
 	INIReader reader("assets/settings.ini");
 
+	float brightness = reader.GetInteger("window", "brightness", 0.5);
 	int window_width = reader.GetInteger("window", "width", 800);
 	int window_height = reader.GetInteger("window", "height", 800);
 	int refresh_rate = reader.GetInteger("window", "refresh_rate", 60);
@@ -181,6 +182,7 @@ int main(int argc, char** argv)
 	glEnable(GL_CULL_FACE);
 
 
+
 	/* --------------------------------------------- */
 	// Initialize scene and render loop
 	/* --------------------------------------------- */
@@ -243,39 +245,17 @@ int main(int argc, char** argv)
 		float lastTimeFPS = float(glfwGetTime());
 
 		// targetFpsTime = 1000/60 -> 60 FPS
-		float targetFpsTime = 1000 / 60;
+		float targetFpsTime = 1000 / refresh_rate;
 
 		// sphere booleans
 		bool spehere2Forward = true;
 		bool spehere1Forward = true;
 
+
+		// Countdown Timer
+		float countDown = 20;
+
 		while (!glfwWindowShouldClose(window)) {
-      
-			float timeMultiplicator = dt * 1000 * 1.5;
-			// cout Ticks
-			//cout << SKIP_TICKS << endl;
-
-			// Compute frame time
-			dt = t;
-			t = float(glfwGetTime());
-			dt = t - dt;
-			t_sum += dt;
-
-			float currentTimeFPS = float(glfwGetTime());
-			FPS++;
-			if (currentTimeFPS - lastTimeFPS >= 1.0)
-			{
-				// print FPS to console
-				float frameTime = 1000/float (FPS);
-				cout << "***** FPS *****\n\n";
-				cout << frameTime << std::endl;
-				cout << "ms/frame\n\n";
-				cout << FPS << std::endl;
-				cout << "FPS\n\n";
-				cout << "***************\n\n";
-				FPS = 0;
-				lastTimeFPS += 1.0f;
-			}
 
 			// Clear backbuffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -283,13 +263,13 @@ int main(int argc, char** argv)
 			// Poll events
 			glfwPollEvents();
 
-			long long start = milliseconds_now();
-
 			// print cameraPosition to console
 			glm::vec3 cameraPositionOLD = camera.getPosition();
 			// print cubeMatrix to console
 			glm::mat4 cubeMatrixOLD = cube.getModelMatrix();
 
+			// timeMultiplicator
+			float timeMultiplicator = dt * 1000 * 1.5;
 
 			// Update Objects
 			glm::mat4 sphere1Matrix = sphere1.getModelMatrix();
@@ -514,18 +494,11 @@ int main(int argc, char** argv)
 					cout << "\n\n";
 			}
 
-
-
-			// FPS dependent game update loop deactivated
-			/*while (t_sum >= targetFpsTime)
-			{*/
-
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
 			if (_camera == 2) {
 				camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
 			}
-			//camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
 
 
 			//my Camera Update Stuff
@@ -535,23 +508,13 @@ int main(int argc, char** argv)
 			glm::vec4 transformedVector = cubeDiv * vector;
 			glm::vec3 newVector = glm::vec3(transformedVector[0], transformedVector[1] + 1.0f, transformedVector[2] + 7.0f);*/
 			//glm::vec3 vector = glm::vec3(cubeMatrixNEW[3][0], cubeMatrixNEW[3][1] + 1.0f, cubeMatrixNEW[3][2] + 7.0f);
-
-
 			//camera.myPositionUpdate(newVector);
-
-			/*t_sum -= targetFpsTime;*/
-
-			// FPS dependent game update loop deactivated
-			//}
-
 
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
 			// Render
-
 			cube.draw();
-
 			cylinder.draw();
 			sphere.draw();
 			ring1.draw();
@@ -559,24 +522,44 @@ int main(int argc, char** argv)
 			ring3.draw();
 			sphere1.draw();
 			sphere2.draw();
-
 			// *******userShip is rendered as cube at the moment*******
 			//userShip.draw();
-      
-      
-			//// Compute frame time
-			//dt = t;
-			//t = float(glfwGetTime());
-			//dt = t - dt;
-			//t_sum += dt;
 
 			// Swap buffers
 			glfwSwapBuffers(window);
 
-			// test
-			/*long long elapsed = milliseconds_now() - start;
-			std::cout << dt*-0.0075 << std::endl;*/
+			// Compute frame time
+			dt = t;
+			t = float(glfwGetTime());
+			dt = t - dt;
+			t_sum += dt;
 
+			float currentTimeFPS = float(glfwGetTime());
+			FPS++;
+			if (currentTimeFPS - lastTimeFPS >= 1.0)
+			{
+				// print FPS to console
+				float frameTime = 1000 / float(FPS);
+				cout << "***** FPS *****\n\n";
+				cout << frameTime << std::endl;
+				cout << "ms/frame\n\n";
+				cout << FPS << std::endl;
+				cout << "FPS\n\n";
+				cout << "***************\n\n";
+				FPS = 0;
+				lastTimeFPS += 1.0f;
+			}
+
+			countDown = countDown - dt;
+			if (countDown <= 0)
+			{
+				glfwSetWindowShouldClose(window, true);
+			}
+
+			if (dt < targetFpsTime)
+			{
+				Sleep(targetFpsTime - dt);
+			}
 		}
 	}
 
