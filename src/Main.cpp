@@ -207,7 +207,7 @@ int main(int argc, char** argv)
 			if (_accalerateNegative) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, 0.01f, 0.0f);
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, 0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, 0.01f));
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
 			if (_accalerate) {
 				// cubeMatrix
 				glm::mat4 cubeMatrix = cube.getModelMatrix();
-				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, -0.01f, 0.0f);
+				glm::vec4 transformedVector = cubeMatrix * glm::vec4(0.0f, 0.0f, -0.0075f, 0.0f);
 				glm::vec3 vector = glm::vec3(transformedVector[0], transformedVector[1], transformedVector[2]);
 				cube.transform(glm::translate(glm::mat4(1.0f), vector));
 				//camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
@@ -231,7 +231,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.001f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(-0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateBackward) {
@@ -245,7 +245,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.001f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateRight) {
@@ -259,7 +259,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(-0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateLeft) {
@@ -273,7 +273,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinRight) {
@@ -287,7 +287,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.001f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(-0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinLeft) {
@@ -301,7 +301,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.001f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_reset) {
