@@ -200,15 +200,45 @@ int main(int argc, char** argv)
 		float dt = 0.0f;
 		float t_sum = 0.0f;
 		double mouse_x, mouse_y;
+		int FPS = 0;
+		float lastTimeFPS = float(glfwGetTime());
+
+		// targetFpsTime = 1000/60 -> 60 FPS
+		float targetFpsTime = 1000 / 60;
 
 		while (!glfwWindowShouldClose(window)) {
+      
 			float timeMultiplicator = dt * 1000;
 			cout << SKIP_TICKS << endl;
+
+			// Compute frame time
+			dt = t;
+			t = float(glfwGetTime());
+			dt = t - dt;
+			t_sum += dt;
+
+			float currentTimeFPS = float(glfwGetTime());
+			FPS++;
+			if (currentTimeFPS - lastTimeFPS >= 1.0)
+			{
+				// print FPS to console
+				float frameTime = 1000/float (FPS);
+				cout << "***** FPS *****\n\n";
+				cout << frameTime << std::endl;
+				cout << "ms/frame\n\n";
+				cout << FPS << std::endl;
+				cout << "FPS\n\n";
+				cout << "***************\n\n";
+				FPS = 0;
+				lastTimeFPS += 1.0f;
+			}
+
 			// Clear backbuffer
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Poll events
 			glfwPollEvents();
+
 			long long start = milliseconds_now();
 
 			// print cameraPosition to console
@@ -346,6 +376,12 @@ int main(int argc, char** argv)
 					cout << "\n\n";
 			}
 
+
+
+			// FPS dependent game update loop deactivated
+			/*while (t_sum >= targetFpsTime)
+			{*/
+
 			// Update camera
 			glfwGetCursorPos(window, &mouse_x, &mouse_y);
 			if (_camera == 2) {
@@ -364,7 +400,12 @@ int main(int argc, char** argv)
 
 
 			//camera.myPositionUpdate(newVector);
-      
+
+			/*t_sum -= targetFpsTime;*/
+
+			// FPS dependent game update loop deactivated
+			//}
+
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
@@ -378,15 +419,14 @@ int main(int argc, char** argv)
 
 			// *******userShip is rendered as cube at the moment*******
 			//userShip.draw();
+      
+      
+			//// Compute frame time
+			//dt = t;
+			//t = float(glfwGetTime());
+			//dt = t - dt;
+			//t_sum += dt;
 
-
-
-			// Compute frame time
-
-			dt = t;
-			t = float(glfwGetTime());
-			dt = t - dt;
-			t_sum += dt;
 
 			// Swap buffers
 			glfwSwapBuffers(window);
