@@ -1,10 +1,20 @@
 #include "Camera.h";
 
 void Camera::positionUpdate(glm::vec3 newPosition) {
-	//_position += newPosition;
-	_position = newPosition;
+	_position += newPosition;
 	_viewMatrix = glm::lookAt(_position, _front + _position, glm::vec3(0.0, 1.0, 0.0));
 
+}
+
+void Camera::myPositionUpdate(glm::vec3 newPosition) {
+	_position = newPosition;
+	_viewMatrix = glm::lookAt(_position, _front + _position, glm::vec3(0.0, 1.0, 0.0));
+}
+
+void Camera::myUpdates(glm::vec3 newPosition, glm::vec3 newFront) {
+	_position = newPosition;
+	_front = newFront;
+	_viewMatrix = glm::lookAt(_position, _front + _position, glm::vec3(0.0, 1.0, 7.0));
 }
 
 void Camera::updates(int x, int y, float zoom, bool dragging, bool strafing) {
@@ -19,7 +29,7 @@ void Camera::updates(int x, int y, float zoom, bool dragging, bool strafing) {
 		_mouseXFirstP = x;
 		_mouseYFirstP = y;
 
-		float sensitivity = 0.5f;
+		float sensitivity = 0.25f;
 		xOffset *= sensitivity;
 		yOffset *= sensitivity;
 
