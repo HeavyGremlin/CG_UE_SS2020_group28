@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 	{
 		// Load shader(s)
 		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("texture.vert", "texture.frag");
-		std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("HUD.vertex", "HUD.fragment");
+		//std::shared_ptr<Shader> textureShader = std::make_shared<Shader>("HUD.vertex", "HUD.fragment");
 		// Create textures
 		std::shared_ptr<Texture> woodTexture = std::make_shared<Texture>("wood_texture.dds");
 		std::shared_ptr<Texture> brickTexture = std::make_shared<Texture>("bricks_diffuse.dds");
@@ -178,7 +178,7 @@ int main(int argc, char** argv)
 		std::shared_ptr<Material> brickTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 8.0f, brickTexture);
 		std::shared_ptr<Material> ringTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 1.0, ringTexture);
 		// Create geometry
-		// Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
+		 //Geometry cube = Geometry(glm::mat4(1.0f), Geometry::createCubeGeometry(1.5f, 1.5f, 2.5f), woodTextureMaterial);
 		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, -5.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
 		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 0.0f, -5.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
 		// create userShip as cube
@@ -208,8 +208,9 @@ int main(int argc, char** argv)
 
 		while (!glfwWindowShouldClose(window)) {
       
-			float timeMultiplicator = dt * 1000;
-			cout << SKIP_TICKS << endl;
+			float timeMultiplicator = dt * 1000 * 1.5;
+			// cout Ticks
+			//cout << SKIP_TICKS << endl;
 
 			// Compute frame time
 			dt = t;
@@ -273,7 +274,14 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(timeMultiplicator* -0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
+
+				glm::mat4 newCubeMatrix = cube.getModelMatrix();
+				glm::mat4 cubeDiv = cubeMatrix - newCubeMatrix;
+				glm::mat3 cubeRotation = glm::mat3(newCubeMatrix);
+				glm::vec3 vector = glm::vec3(1.0f, 0.0f, 0.0f);
+				glm::vec3 transformedVector = cubeRotation * vector;
+
+				cube.transform(glm::rotate(timeMultiplicator* -0.002f, transformedVector));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateBackward) {
@@ -287,7 +295,14 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(timeMultiplicator*0.002f, glm::vec3(1.0f, 0.0f, 0.0f)));
+
+				glm::mat4 newCubeMatrix = cube.getModelMatrix();
+				glm::mat4 cubeDiv = cubeMatrix - newCubeMatrix;
+				glm::mat3 cubeRotation = glm::mat3(newCubeMatrix);
+				glm::vec3 vector = glm::vec3(1.0f, 0.0f, 0.0f);
+				glm::vec3 transformedVector = cubeRotation * vector;
+
+				cube.transform(glm::rotate(timeMultiplicator*0.002f, transformedVector));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateRight) {
@@ -301,7 +316,14 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(timeMultiplicator*-0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+				glm::mat4 newCubeMatrix = cube.getModelMatrix();
+				glm::mat4 cubeDiv = cubeMatrix - newCubeMatrix;
+				glm::mat3 cubeRotation = glm::mat3(newCubeMatrix);
+				glm::vec3 vector = glm::vec3(0.0f, 1.0f, 0.0f);
+				glm::vec3 transformedVector = cubeRotation * vector;
+
+				cube.transform(glm::rotate(timeMultiplicator*-0.002f, transformedVector));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateLeft) {
@@ -315,7 +337,14 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(timeMultiplicator*0.002f, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+				glm::mat4 newCubeMatrix = cube.getModelMatrix();
+				glm::mat4 cubeDiv = cubeMatrix - newCubeMatrix;
+				glm::mat3 cubeRotation = glm::mat3(newCubeMatrix);
+				glm::vec3 vector = glm::vec3(0.0f, 1.0f, 0.0f);
+				glm::vec3 transformedVector = cubeRotation * vector;
+
+				cube.transform(glm::rotate(timeMultiplicator*0.002f, transformedVector));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinRight) {
@@ -329,7 +358,14 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(timeMultiplicator*-0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
+
+				glm::mat4 newCubeMatrix = cube.getModelMatrix();
+				glm::mat4 cubeDiv = cubeMatrix - newCubeMatrix;
+				glm::mat3 cubeRotation = glm::mat3(newCubeMatrix);
+				glm::vec3 vector = glm::vec3(0.0f, 0.0f, 1.0f);
+				glm::vec3 transformedVector = cubeRotation * vector;
+
+				cube.transform(glm::rotate(timeMultiplicator*-0.002f, transformedVector));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinLeft) {
@@ -343,7 +379,14 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(timeMultiplicator*0.002f, glm::vec3(0.0f, 0.0f, 1.0f)));
+
+				glm::mat4 newCubeMatrix = cube.getModelMatrix();
+				glm::mat4 cubeDiv = cubeMatrix - newCubeMatrix;
+				glm::mat3 cubeRotation = glm::mat3(newCubeMatrix);
+				glm::vec3 vector = glm::vec3(0.0f, 0.0f, 1.0f);
+				glm::vec3 transformedVector = cubeRotation * vector;
+
+				cube.transform(glm::rotate(timeMultiplicator*0.002f, transformedVector));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_reset) {
@@ -430,8 +473,10 @@ int main(int argc, char** argv)
 
 			// Swap buffers
 			glfwSwapBuffers(window);
-			long long elapsed = milliseconds_now() - start;
-			std::cout << dt*-0.0075 << std::endl;
+
+			// test
+			/*long long elapsed = milliseconds_now() - start;
+			std::cout << dt*-0.0075 << std::endl;*/
 
 		}
 	}
@@ -552,19 +597,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			if (action == GLFW_RELEASE) _rotateBackward = false;
 			else _rotateBackward = true;
 			break;
-		case GLFW_KEY_D:
+		case GLFW_KEY_E:
 			if (action == GLFW_RELEASE) _rotateRight = false;
 			else _rotateRight = true;
 			break;
-		case GLFW_KEY_A:
+		case GLFW_KEY_Q:
 			if (action == GLFW_RELEASE) _rotateLeft = false;
 			else _rotateLeft = true;
 			break;
-		case GLFW_KEY_E:
+		case GLFW_KEY_D:
 			if (action == GLFW_RELEASE) _spinRight = false;
 			else _spinRight = true;
 			break;
-		case GLFW_KEY_Q:
+		case GLFW_KEY_A:
 			if (action == GLFW_RELEASE) _spinLeft = false;
 			else _spinLeft = true;
 			break;
