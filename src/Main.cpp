@@ -200,15 +200,8 @@ int main(int argc, char** argv)
 
 			// print cameraPosition to console
 			glm::vec3 cameraPositionOLD = camera.getPosition();
-			cout << "cameraPositionOLD\n";
-			cout << glm::to_string(cameraPositionOLD) << std::endl;
-			cout << "\n\n";
-
 			// print cubeMatrix to console
 			glm::mat4 cubeMatrixOLD = cube.getModelMatrix();
-			cout << "cubeMatrixOLD\n";
-			cout << glm::to_string(cubeMatrixOLD) << std::endl;
-			cout << "\n\n";
 
 			// Update Objects
 			if (_accalerateNegative) {
@@ -238,7 +231,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(-0.001f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateBackward) {
@@ -252,7 +245,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.0005f, glm::vec3(1.0f, 0.0f, 0.0f)));
+				cube.transform(glm::rotate(0.001f, glm::vec3(1.0f, 0.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateRight) {
@@ -266,7 +259,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(-0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_rotateLeft) {
@@ -280,7 +273,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)));
+				cube.transform(glm::rotate(0.001f, glm::vec3(0.0f, 1.0f, 0.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinRight) {
@@ -294,7 +287,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(-0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(-0.001f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_spinLeft) {
@@ -308,7 +301,7 @@ int main(int argc, char** argv)
 				glm::vec3 worldCenterPosition = glm::vec3(0.0f) - cubePosition;
 
 				cube.transform(glm::translate(glm::mat4(1.0f), worldCenterPosition));
-				cube.transform(glm::rotate(0.0005f, glm::vec3(0.0f, 0.0f, 1.0f)));
+				cube.transform(glm::rotate(0.001f, glm::vec3(0.0f, 0.0f, 1.0f)));
 				cube.transform(glm::translate(glm::mat4(1.0f), cubePosition));
 			}
 			if (_reset) {
@@ -339,11 +332,6 @@ int main(int argc, char** argv)
 					cout << "cubePosition\n";
 					cout << glm::to_string(cubePosition) << std::endl;
 					cout << "\n\n";
-
-
-				/*printCameraPosition(camera);
-				printCubeMatrix(cube);
-				printCubePosition(cube);*/
 			}
 
 			// Update camera
@@ -351,18 +339,19 @@ int main(int argc, char** argv)
 			if (_camera == 2) {
 				camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
 			}
-			camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
-			/*if (_accalerate) {
-				cube.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.01f)));
-				camera.positionUpdate(glm::vec3(0.0f, 0.0f, -0.01f));
-			}*/
+			//camera.updates(int(mouse_x), int(mouse_y), _zoom, _dragging, _strafing);
 
-			glm::mat4 cubeMatrixNEW = cube.getModelMatrix();
-			glm::vec3 vector = glm::vec3(cubeMatrixNEW[3][0], cubeMatrixNEW[3][1] + 1.0f, cubeMatrixNEW[3][2] + 7.0f);
 
-			//glm::mat4 viewMatrix = glm::lookAt(vector, vector, glm::vec3(0.0f, 1.0f, 0.0f));
+			//my Camera Update Stuff
+			/*glm::mat4 cubeMatrixNEW = cube.getModelMatrix();
+			glm::mat4 cubeDiv = cubeMatrixNEW - cubeMatrixOLD;
+			glm::vec4 vector = glm::vec4(cubeMatrixNEW[3]);
+			glm::vec4 transformedVector = cubeDiv * vector;
+			glm::vec3 newVector = glm::vec3(transformedVector[0], transformedVector[1] + 1.0f, transformedVector[2] + 7.0f);*/
+			//glm::vec3 vector = glm::vec3(cubeMatrixNEW[3][0], cubeMatrixNEW[3][1] + 1.0f, cubeMatrixNEW[3][2] + 7.0f);
 
-			camera.positionUpdate(vector);
+
+			//camera.myPositionUpdate(newVector);
       
 			// Set per-frame uniforms
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
