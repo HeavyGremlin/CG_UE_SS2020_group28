@@ -23,7 +23,20 @@
 
 // MY includes
 #include <string>
+using namespace physx;
 
+PxDefaultAllocator		gAllocator;
+PxDefaultErrorCallback	gErrorCallback;
+
+PxFoundation*			gFoundation = NULL;
+PxPhysics*				gPhysics = NULL;
+
+PxDefaultCpuDispatcher*	gDispatcher = NULL;
+PxScene*				gScene = NULL;
+
+PxMaterial*				gMaterial = NULL;
+
+PxPvd*                  gPvd = NULL;
 
 /* --------------------------------------------- */
 // Prototypes
@@ -55,6 +68,12 @@ static bool _rotateRight = false;
 static bool _spinRight = false;
 static bool _spinLeft = false;
 static bool _reset = false;
+static bool _cameraUp = false;
+static bool _cameraDown = false;
+static bool _cameraLeft = false;
+static bool _cameraRight = false;
+static bool _cameraForward = false;
+static bool _cameraBackward = false;
 static int _camera = 2;
 static bool _coutINFO = false;
 int INFO_count = 0;
@@ -451,6 +470,24 @@ int main(int argc, char** argv)
 
 				cube.resetModelMatrix();
 			}
+			if (_cameraUp) {
+				camera.positionUpdate(glm::vec3(0.0f, timeMultiplicator*0.01f, 0.0f));
+			}
+			if (_cameraDown) {
+				camera.positionUpdate(glm::vec3(0.0f, timeMultiplicator*-0.01f, 0.0f));
+			}
+			if (_cameraRight) {
+				camera.positionUpdateStrafe(0.02f);
+			}
+			if (_cameraLeft) {
+				camera.positionUpdateStrafe(-0.02f);
+			}
+			if (_cameraForward) {
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, timeMultiplicator*-0.01f));
+			}
+			if (_cameraBackward) {
+				camera.positionUpdate(glm::vec3(0.0f, 0.0f, float(timeMultiplicator)*0.01f));
+			}
 
 			//show object info
 			if (_coutINFO) {
@@ -598,10 +635,8 @@ void setPerFrameUniforms(Shader* shader, Camera& camera, DirectionalLight& dirL,
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		_dragging = true;
-	} else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		_dragging = false;
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+		_dragging = !_dragging;
 	} else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
 		_strafing = true;
 	} else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
@@ -675,6 +710,31 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			if (action == GLFW_RELEASE) _reset = false;
 			else _reset = true;
 			break;
+		case GLFW_KEY_UP:
+			if (action == GLFW_RELEASE) _cameraUp = false;
+			else _cameraUp = true;
+			break;
+		case GLFW_KEY_DOWN:
+			if (action == GLFW_RELEASE) _cameraDown = false;
+			else _cameraDown = true;
+			break;
+		case GLFW_KEY_LEFT:
+			if (action == GLFW_RELEASE) _cameraLeft = false;
+			else _cameraLeft = true;
+			break;
+		case GLFW_KEY_RIGHT:
+			if (action == GLFW_RELEASE) _cameraRight = false;
+			else _cameraRight = true;
+			break;
+		case GLFW_KEY_PERIOD:
+			if (action == GLFW_RELEASE) _cameraForward = false;
+			else _cameraForward = true;
+			break;
+		case GLFW_KEY_SLASH:
+			if (action == GLFW_RELEASE) _cameraBackward = false;
+			else _cameraBackward = true;
+			break;
+
 		case GLFW_KEY_I:
 			if (action == GLFW_RELEASE) {
 				INFO_count = 0;
@@ -813,3 +873,4 @@ static long milliseconds_now() {
 		return GetTickCount();
 	}
 }
+
