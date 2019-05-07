@@ -100,7 +100,6 @@ int main(int argc, char** argv)
 	int window_width = reader.GetInteger("window", "width", 800);
 	int window_height = reader.GetInteger("window", "height", 800);
 	int refresh_rate = reader.GetInteger("window", "refresh_rate", 60);
-	float brightness = reader.GetInteger("window", "brightness", 50);
 	bool fullscreen = reader.GetBoolean("window", "fullscreen", false);
 	std::string window_title = reader.Get("window", "title", "ECG");
 	float fov = float(reader.GetReal("camera", "fov", 60.0f));
